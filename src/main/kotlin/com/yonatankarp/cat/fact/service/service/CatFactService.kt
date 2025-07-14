@@ -1,7 +1,7 @@
 package com.yonatankarp.cat.fact.service.service
 
+import com.yonatankarp.cat.fact.client.ports.Fact
 import com.yonatankarp.cat.fact.service.repository.CatFactRepository
-import com.yonatankarpcat.fact.client.ports.Fact
 import org.springframework.stereotype.Service
 
 @Service

@@ -1,8 +1,8 @@
 package com.yonatankarp.cat.fact.service.controllers
 
+import com.yonatankarp.cat.fact.client.ports.Fact
 import com.yonatankarp.cat.fact.service.request.RequestContext
 import com.yonatankarp.cat.fact.service.service.CatFactService
-import com.yonatankarpcat.fact.client.ports.Fact
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.ok
 import org.springframework.web.bind.annotation.GetMapping

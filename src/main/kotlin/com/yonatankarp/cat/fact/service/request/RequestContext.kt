@@ -1,6 +1,6 @@
 package com.yonatankarp.cat.fact.service.request
 
-import com.yonatankarpcat.fact.client.ports.Fact
+import com.yonatankarp.cat.fact.client.ports.Fact
 
 /**
  * Provides random amount of facts about cats into the request context.

@@ -1,6 +1,6 @@
 package com.yonatankarp.cat.fact.service.repository
 
-import com.yonatankarpcat.fact.client.ports.Fact
+import com.yonatankarp.cat.fact.client.ports.Fact
 import org.jooq.DSLContext
 import org.jooq.generated.Tables
 import org.springframework.stereotype.Repository
