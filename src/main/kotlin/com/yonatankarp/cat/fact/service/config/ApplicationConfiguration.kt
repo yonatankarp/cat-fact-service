@@ -1,11 +1,11 @@
 package com.yonatankarp.cat.fact.service.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.yonatankarp.cat.fact.client.ports.CatFactFactory
+import com.yonatankarp.cat.fact.client.ports.CatFactProvider
+import com.yonatankarp.cat.fact.client.ports.ProviderType
 import com.yonatankarp.cat.fact.service.request.RequestContext
 import com.yonatankarp.cat.fact.service.request.RequestContextImpl
-import com.yonatankarpcat.fact.client.ports.CatFactFactory
-import com.yonatankarpcat.fact.client.ports.CatFactProvider
-import com.yonatankarpcat.fact.client.ports.ProviderType
 import kotlinx.coroutines.runBlocking
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

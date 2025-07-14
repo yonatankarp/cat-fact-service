@@ -1,12 +1,11 @@
 package com.yonatankarp.cat.fact.service.controllers
 
 import com.ninjasquad.springmockk.MockkBean
+import com.yonatankarp.cat.fact.client.ports.Fact
 import com.yonatankarp.cat.fact.service.request.RequestContext
 import com.yonatankarp.cat.fact.service.service.CatFactService
-import com.yonatankarpcat.fact.client.ports.Fact
 import io.mockk.coEvery
 import io.mockk.coVerify
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -19,8 +18,9 @@ import org.springframework.test.context.TestConstructor.AutowireMode
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import kotlin.time.Duration.Companion.seconds
 
-@OptIn(ExperimentalCoroutinesApi::class, ExperimentalStdlibApi::class)
+// @OptIn(ExperimentalCoroutinesApi::class)
 @ExtendWith(SpringExtension::class)
 @WebMvcTest(controllers = [CatFactController::class])
 @TestConstructor(autowireMode = AutowireMode.ALL)
@@ -35,7 +35,7 @@ class CatFactControllerTest(
 
     @Test
     fun `should serve default amount of facts`() =
-        runTest {
+        runTest(timeout = 1.seconds) {
             coEvery { service.storeFacts(any()) } returns Unit
             coEvery { requestContext.facts } returns setOf(Fact("fact about cat..."))
 
@@ -57,7 +57,7 @@ class CatFactControllerTest(
     @ParameterizedTest
     @MethodSource("getData")
     fun `should serve custom amount of facts`(amountOfFacts: Int) =
-        runTest {
+        runTest(timeout = 1.seconds) {
             coEvery { service.storeFacts(any()) } returns Unit
             coEvery { requestContext.facts } returns (1..amountOfFacts).map { Fact("Fact $it") }.toSet()
 

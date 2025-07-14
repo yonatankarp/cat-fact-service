@@ -1,10 +1,9 @@
 package com.yonatankarp.cat.fact.service
 
 import com.ninjasquad.springmockk.MockkBean
-import com.yonatankarpcat.fact.client.ports.CatFactProvider
-import com.yonatankarpcat.fact.client.ports.Fact
+import com.yonatankarp.cat.fact.client.ports.CatFactProvider
+import com.yonatankarp.cat.fact.client.ports.Fact
 import io.mockk.coEvery
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.jooq.DSLContext
 import org.jooq.generated.Tables
@@ -18,11 +17,11 @@ import org.springframework.test.context.TestConstructor.AutowireMode
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
 import org.testcontainers.junit.jupiter.Testcontainers
+import kotlin.time.Duration.Companion.seconds
 
 @SpringBootTest
 @Testcontainers
 @TestConstructor(autowireMode = AutowireMode.ALL)
-@OptIn(ExperimentalCoroutinesApi::class)
 @AutoConfigureMockMvc
 class CatFactServiceIntegrationTest(
     private val mockMvc: MockMvc,
@@ -32,8 +31,8 @@ class CatFactServiceIntegrationTest(
     private lateinit var provider: CatFactProvider
 
     @Test
-    fun `should fetch facts and store them correctly in the database`() =
-        runTest {
+    fun `should fetch facts and store them correctly in the database`(): Unit =
+        runTest(timeout = 5.seconds) {
             // Given facts
             val catFact = "fact about cat..."
             coEvery { provider.get(any()) } returns setOf(Fact(catFact))
