@@ -1,14 +1,22 @@
+import io.spring.gradle.dependencymanagement.dsl.DependencyManagementExtension
+
 plugins {
-    id("com.diffplug.spotless") version libs.versions.spotless 
-    id("com.revolut.jooq-docker") version libs.versions.jooq.docker.plugin 
-    id("io.spring.dependency-management") version libs.versions.spring.dependency.management 
+    alias(libs.plugins.spotless)
+    alias(libs.plugins.springboot.dependency.management)
+    alias(libs.plugins.springboot)
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.spring)
+    alias(libs.plugins.jooq)
     id("jacoco")
-    id("org.springframework.boot") version libs.versions.springboot 
     id("cat-fact-service.code-metrics")
     id("cat-fact-service.java-conventions")
     id("cat-fact-service.publishing-conventions")
-    kotlin("jvm") version libs.versions.kotlin 
-    kotlin("plugin.spring") version libs.versions.kotlin 
+}
+
+// Read the jOOQ version that Spring Boot manages, this is a workaround until Spring updates their JOOQ version to 3.20.x
+val bootManagedJooq: String by lazy {
+    (extensions.getByName("dependencyManagement") as DependencyManagementExtension)
+        .importedProperties["jooq.version"] as String
 }
 
 repositories {
@@ -50,22 +58,16 @@ dependencies {
 
     // Persistence
     runtimeOnly(libs.postgresql)
-    jdbc(libs.postgresql) // Required to generate JOOQ models
+    jooqCodegen("org.jooq:jooq-codegen:$bootManagedJooq")
+    jooqCodegen(libs.postgresql) // Required to generate JOOQ models
     implementation(libs.bundles.persistence.support.all)
-
-    // Documentation
-    implementation(libs.springdoc.openapi.starter)
 
     // Observability
     implementation(libs.honeycomb.opentelemetry.sdk)
     compileOnly(libs.honeycomb.opentelemetry.javaagent)
 
     // Tests
-    testImplementation(libs.mockk.core)
-    testImplementation(libs.mockk.spring)
-
-    testImplementation(libs.testcontainers.jupiter)
-    testImplementation(libs.testcontainers.postgres)
+    testImplementation(libs.bundles.tests.all)
 }
 
 dependencyManagement {
