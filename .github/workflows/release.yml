@@ -20,7 +20,7 @@ jobs:
         service: [ cat-fact-service ]
     steps:
       - name: Git Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         # Do not trigger a checkout when opening PRs from a fork (helps avoid
         # "pwnn request". See https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request_target )
         with:
