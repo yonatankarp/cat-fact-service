@@ -13,7 +13,7 @@ postgres = "42.7.7"
 spotless = "7.2.1"
 spring_dependency_management = "1.1.7"
 springboot = "3.5.4"
-testcontainers = "1.21.3"
+testcontainers = "1.21.4"
 
 [libraries]
 
