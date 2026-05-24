@@ -10,12 +10,16 @@ import org.jooq.generated.Tables
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc
 import org.springframework.test.context.TestConstructor
 import org.springframework.test.context.TestConstructor.AutowireMode
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.testcontainers.junit.jupiter.Testcontainers
 import kotlin.time.Duration.Companion.seconds
 
@@ -38,16 +42,18 @@ class CatFactServiceIntegrationTest(
             coEvery { provider.get(any()) } returns setOf(Fact(catFact))
 
             // When we make a call to the service
+            val result =
+                mockMvc
+                    .get("/api/v1/cat/facts")
+                    .andExpect {
+                        request { asyncStarted() }
+                    }.andReturn()
+
             mockMvc
-                .get("/api/v1/cat/facts")
-                .asyncDispatch()
-                .andExpect {
-                    status { isOk() }
-                    content {
-                        jsonPath("$.facts[0]") { value(catFact) }
-                    }
-                }.andDo { print() }
-                .andReturn()
+                .perform(asyncDispatch(result))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.facts[0].value").value(catFact))
+                .andDo(print())
 
             // Then we expect the facts to be correctly stored in the db
             val fact =
