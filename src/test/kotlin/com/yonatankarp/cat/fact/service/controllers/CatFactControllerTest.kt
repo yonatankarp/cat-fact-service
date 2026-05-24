@@ -18,6 +18,11 @@ import org.springframework.test.context.TestConstructor.AutowireMode
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.asyncDispatch
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import kotlin.time.Duration.Companion.seconds
 
 // @OptIn(ExperimentalCoroutinesApi::class)
@@ -39,16 +44,18 @@ class CatFactControllerTest(
             coEvery { service.storeFacts(any()) } returns Unit
             coEvery { requestContext.facts } returns setOf(Fact("fact about cat..."))
 
+            val result =
+                mockMvc
+                    .get("/api/v1/cat/facts")
+                    .andExpect {
+                        request { asyncStarted() }
+                    }.andReturn()
+
             mockMvc
-                .get("/api/v1/cat/facts")
-                .asyncDispatch()
-                .andExpect {
-                    status { isOk() }
-                    content {
-                        jsonPath("$.facts[0]") { value("fact about cat...") }
-                    }
-                }.andDo { print() }
-                .andReturn()
+                .perform(asyncDispatch(result))
+                .andExpect(status().isOk())
+                .andExpect(content().json("""{"facts":[{"value":"fact about cat..."}]}"""))
+                .andDo(print())
 
             coVerify(exactly = 1) { requestContext.facts }
             coVerify(exactly = 1) { service.storeFacts(any()) }
@@ -64,18 +71,19 @@ class CatFactControllerTest(
             val result =
                 mockMvc
                     .get("/api/v1/cat/facts?max=$amountOfFacts")
-                    .asyncDispatch()
                     .andExpect {
-                        status { isOk() }
-                        content {
-                            for (i in 0..<amountOfFacts) {
-                                jsonPath("$.facts[$i]") { value("Fact ${i + 1}") }
-                            }
-                        }
-                    }.andDo { print() }
-                    .andReturn()
+                        request { asyncStarted() }
+                    }.andReturn()
 
-            println(result.response.contentAsString)
+            val response =
+                mockMvc
+                    .perform(asyncDispatch(result))
+                    .andExpect(status().isOk())
+                    .andDo(print())
+
+            for (i in 0..<amountOfFacts) {
+                response.andExpect(jsonPath("$.facts[$i].value").value("Fact ${i + 1}"))
+            }
 
             coVerify(exactly = 1) { requestContext.facts }
             coVerify(exactly = 1) { service.storeFacts(any()) }
