@@ -33,6 +33,7 @@ springboot_jdbc_starter = { module = "org.springframework.boot:spring-boot-start
 springboot_jooq_starter = { module = "org.springframework.boot:spring-boot-starter-jooq" }
 springboot_test_starter = { module = "org.springframework.boot:spring-boot-starter-test" }
 springboot_web_starter = { module = "org.springframework.boot:spring-boot-starter-web" }
+springboot_webmvc_test_starter = { module = "org.springframework.boot:spring-boot-starter-webmvc-test" }
 
 ## Observability
 honeycomb_opentelemetry_sdk = { module = "io.honeycomb:honeycomb-opentelemetry-sdk", version.ref = "honeycomb" }
@@ -84,6 +85,7 @@ persistence_support_all = [
 tests_all = [
     "mockk_core",
     "mockk_spring",
+    "springboot_webmvc_test_starter",
     "testcontainers_jupiter",
     "testcontainers_postgres",
 ]
