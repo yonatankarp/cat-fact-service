@@ -31,7 +31,9 @@ kotlinx_coroutines_test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 # Spring Boot
 springboot_jdbc_starter = { module = "org.springframework.boot:spring-boot-starter-jdbc" }
 springboot_jooq_starter = { module = "org.springframework.boot:spring-boot-starter-jooq" }
+springboot_jackson2 = { module = "org.springframework.boot:spring-boot-jackson2" }
 springboot_test_starter = { module = "org.springframework.boot:spring-boot-starter-test" }
+springboot_flyway_starter = { module = "org.springframework.boot:spring-boot-starter-flyway" }
 springboot_web_starter = { module = "org.springframework.boot:spring-boot-starter-web" }
 springboot_webmvc_test_starter = { module = "org.springframework.boot:spring-boot-starter-webmvc-test" }
 
@@ -73,6 +75,7 @@ kotlin_all = [
 springboot_all = [
     "springboot_jdbc_starter",
     "springboot_jooq_starter",
+    "springboot_jackson2",
     "springboot_test_starter",
     "springboot_web_starter",
 ]
@@ -80,6 +83,7 @@ springboot_all = [
 persistence_support_all = [
     "flyway_postgresql",
     "hikaricp_core",
+    "springboot_flyway_starter",
 ]
 
 tests_all = [
