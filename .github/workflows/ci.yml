@@ -14,6 +14,7 @@ jobs:
       contents: read
       pull-requests: write
       checks: write
+      packages: read
     uses: yonatankarp/github-actions/.github/workflows/ci.yml@v2
     with:
       dockerfile-path: Dockerfile
