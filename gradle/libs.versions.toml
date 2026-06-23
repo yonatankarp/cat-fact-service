@@ -1,6 +1,6 @@
 [versions]
 
-catFactClient = "0.3.3"
+catFactClient = "0.3.4"
 coroutines = "1.11.0"
 honeycomb = "1.7.0"
 jacoco = "0.8.13"
